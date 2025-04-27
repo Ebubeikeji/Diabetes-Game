@@ -54,8 +54,8 @@
         <button onclick="startGame('Mounjaro')">Mounjaro</button>
         <button onclick="startGame('Ozempic')">Ozempic</button>
         <button onclick="startGame('Victoza')">Victoza</button>
-        <p>Day: <span id="day">0</span>/10</p>
-        <button id="next-day-btn" onclick="nextDay()" disabled>Next Day</button>
+        <p>Day: <span id="day">0</span>/20</p>
+        <button id="next-day-btn" onclick="nextFiveDays()" disabled>Next 5 Days</button>
         <p id="result" style="display: none;"></p>
         <button id="reset-btn" onclick="resetGame()" style="display: none;">Play Again</button>
     </div>
@@ -65,7 +65,8 @@
         let day = 0;
         let drug = '';
         let glucoseReductionRate = 0;
-        const maxDays = 10;
+        const maxDays = 20;
+        const daysPerClick = 5;
 
         const characterStates = {
             diabetes: 'https://raw.githubusercontent.com/Ebubeikeji/Diabetes-Game/main/tired.png',
@@ -83,11 +84,15 @@
             updateCharacter();
         }
 
-        function nextDay() {
+        function nextFiveDays() {
             if (day < maxDays) {
-                day++;
-                glucose -= glucoseReductionRate;
-                if (glucose < 0.9) glucose = 0.9;
+                day += daysPerClick;
+                if (day > maxDays) day = maxDays; // Prevent overshooting
+
+                // Calculate total reduction for 5 days
+                let totalReduction = glucoseReductionRate * daysPerClick;
+                glucose -= totalReduction;
+                if (glucose < 0.9) glucose = 0.9; // Minimum healthy level
 
                 document.getElementById('glucose').textContent = glucose.toFixed(2);
                 document.getElementById('day').textContent = day;
