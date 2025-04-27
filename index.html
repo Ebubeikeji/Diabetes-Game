@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T2DM Blood Sugar Game</title>
+    <style>
+        body {
+            font-family: Poppins, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        .game-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #4A2C0B;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #FFD700;
+            color: black;
+        }
+        #character {
+            width: 100px;
+            height: 100px;
+            margin: 10px auto;
+            transition: all 0.5s;
+        }
+        #status {
+            font-size: 14px;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h2>Help the Character Manage Blood Sugar!</h2>
+        <img id="character" src="https://via.placeholder.com/100x100/ff0000?text=Tired" alt="Character">
+        <p>Starting Glucose: <span id="glucose">1.5</span> × 10⁻³ g/cm³</p>
+        <p id="status">Status: Diabetes (Above 1.2 × 10⁻³ g/cm³)</p>
+        <p>Choose a drug to start the treatment:</p>
+        <button onclick="startGame('Mounjaro')">Mounjaro</button>
+        <button onclick="startGame('Ozempic')">Ozempic</button>
+        <button onclick="startGame('Victoza')">Victoza</button>
+        <p>Day: <span id="day">0</span>/10</p>
+        <button id="next-day-btn" onclick="nextDay()" disabled>Next Day</button>
+        <p id="result" style="display: none;"></p>
+        <button id="reset-btn" onclick="resetGame()" style="display: none;">Play Again</button>
+    </div>
+
+    <script>
+        let glucose = 1.5; // Starting glucose level (× 10⁻³ g/cm³)
+        let day = 0;
+        let drug = '';
+        let glucoseReductionRate = 0;
+        const maxDays = 10;
+
+        const characterStates = {
+            diabetes: 'https://via.placeholder.com/100x100/ff0000?text=Tired', // Replace with tired sprite
+            prediabetes: 'https://via.placeholder.com/100x100/ffd700?text=Neutral', // Replace with neutral sprite
+            normal: 'https://via.placeholder.com/100x100/00ff00?text=Healthy' // Replace with healthy sprite
+        };
+
+        function startGame(selectedDrug) {
+            drug = selectedDrug;
+            if (drug === 'Mounjaro') glucoseReductionRate = 0.04;
+            else if (drug === 'Ozempic') glucoseReductionRate = 0.03;
+            else if (drug === 'Victoza') glucoseReductionRate = 0.02;
+
+            document.getElementById('next-day-btn').disabled = false;
+            updateCharacter();
+        }
+
+        function nextDay() {
+            if (day < maxDays) {
+                day++;
+                glucose -= glucoseReductionRate;
+                if (glucose < 0.9) glucose = 0.9;
+
+                document.getElementById('glucose').textContent = glucose.toFixed(2);
+                document.getElementById('day').textContent = day;
+                updateCharacter();
+                updateStatus();
+
+                if (day === maxDays) {
+                    document.getElementById('next-day-btn').disabled = true;
+                    document.getElementById('result').style.display = 'block';
+                    document.getElementById('result').textContent = 
+                        `Treatment complete! With ${drug}, glucose is now ${glucose.toFixed(2)} × 10⁻³ g/cm³. Explore our model replications to learn more!`;
+                    document.getElementById('reset-btn').style.display = 'block';
+                }
+            }
+        }
+
+        function updateCharacter() {
+            const character = document.getElementById('character');
+            if (glucose > 1.2) {
+                character.src = characterStates.diabetes;
+            } else if (glucose > 1.0) {
+                character.src = characterStates.prediabetes;
+            } else {
+                character.src = characterStates.normal;
+            }
+        }
+
+        function updateStatus() {
+            const status = glucose > 1.2 ? 'Diabetes (Above 1.2 × 10⁻³ g/cm³)' : 
+                          glucose > 1.0 ? 'Prediabetes (1.0–1.2 × 10⁻³ g/cm³)' : 
+                          'Normal (Below 1.0 × 10⁻³ g/cm³)';
+            document.getElementById('status').textContent = `Status: ${status}`;
+        }
+
+        function resetGame() {
+            glucose = 1.5;
+            day = 0;
+            drug = '';
+            glucoseReductionRate = 0;
+
+            document.getElementById('glucose').textContent = glucose.toFixed(2);
+            document.getElementById('day').textContent = day;
+            document.getElementById('character').src = characterStates.diabetes;
+            document.getElementById('status').textContent = 'Status: Diabetes (Above 1.2 × 10⁻³ g/cm³)';
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('next-day-btn').disabled = true;
+            document.getElementById('reset-btn').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
