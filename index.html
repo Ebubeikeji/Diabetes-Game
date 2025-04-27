@@ -47,7 +47,7 @@
 <body>
     <div class="game-container">
         <h2>Help the Character Manage Blood Sugar!</h2>
-        <img id="character" src="https://via.placeholder.com/100x100/ff0000?text=Tired" alt="Character">
+        <img id="character" src="https://raw.githubusercontent.com/Ebubeikeji/Diabetes-Game/main/tired.png" alt="Character">
         <p>Starting Glucose: <span id="glucose">1.5</span> × 10⁻³ g/cm³</p>
         <p id="status">Status: Diabetes (Above 1.2 × 10⁻³ g/cm³)</p>
         <p>Choose a drug to start the treatment:</p>
@@ -68,9 +68,9 @@
         const maxDays = 10;
 
         const characterStates = {
-            diabetes: 'https://via.placeholder.com/100x100/ff0000?text=Tired', // Replace with tired sprite
-            prediabetes: 'https://via.placeholder.com/100x100/ffd700?text=Neutral', // Replace with neutral sprite
-            normal: 'https://via.placeholder.com/100x100/00ff00?text=Healthy' // Replace with healthy sprite
+            diabetes: 'https://raw.githubusercontent.com/Ebubeikeji/Diabetes-Game/main/tired.png',
+            prediabetes: 'https://raw.githubusercontent.com/Ebubeikeji/Diabetes-Game/main/neutral.png',
+            normal: 'https://raw.githubusercontent.com/Ebubeikeji/Diabetes-Game/main/healthy.png'
         };
 
         function startGame(selectedDrug) {
